@@ -1,0 +1,103 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.Adan {
+    background-color: rgb(6, 8, 19);
+    height: 100vh;
+    padding: 20px;
+    color: white;
+
+}
+
+
+.Adan .container .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+}
+.Adan .container .header .time{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+.Adan .container .header h1 {
+    font-size: 30px;
+    font-weight: 200;
+}
+
+.Adan .container .content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 80vh;
+
+
+}
+
+.Adan .container .content .title {
+    font-size: 25px;
+}
+
+.Adan .container .content form {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #e1b70d;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: rgba(255, 255, 255, 0.1);
+    width: fit-content;
+}
+
+.Adan .container .content form input {
+    padding: 10px;
+    border: none;
+    outline: none;
+    border-radius: 0;
+    width: 250px;
+}
+
+.Adan .container .content form button {
+    padding: 10px;
+    border: none;
+    background-color: #f1c40f;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.Adan .container .content form button:hover {
+    background-color: #e1b70d;
+}
+
+.Adan .container .content .pray-times {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.Adan .container .content .pray-times .card{
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 10px;
+    border-radius: 8px;
+    margin: 10px;
+    width: 200px;
+    text-align: center; 
+    display: flex;
+    gap: 20px;
+    
+}
+.Adan .container .content .pray-times .card .info{
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+.Adan .container .content .pray-times .card img{
+    width: 50px;
+    height: 50px;
+}
