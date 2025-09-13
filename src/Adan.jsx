@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Adan.css';
 import fajr from './images/fajr.png';
-import Timer from './componants/Timer';
 import adan from './adan.mp3';
 
 function Adan() {
@@ -12,25 +11,24 @@ function Adan() {
     const [clickpage, setClickpage] = useState(false);
     const [time, setTime] = useState(new Date());
 
-    // const [currenttime, setCurrenttime] = useState('16:48');
-    setInterval(() => {
-        setTime(new Date());
-    }, 1000);
-
-
-
-    const today = new Date();
     useEffect(() => {
-        const formattedDate = `${today.getDate()}-${today.getMonth() + 1}-${today.getFullYear()}`;
+        const interval = setInterval(() => {
+            setTime(new Date());
+        }, 1000);
+        return () => clearInterval(interval);
+    }, []);
 
+    useEffect(() => {
+        const today = new Date();
+        const formattedDate = `${today.getDate()}-${today.getMonth() + 1}-${today.getFullYear()}`;
         fetch(`https://api.aladhan.com/v1/timingsByCity/${formattedDate}?city=${city}&country=Morocco&method=3`)
             .then((response) => response.json())
             .then((data) => setDataPray(data.data.timings));
     }, [city]);
 
     const checkPrayerTime = (prayerTime) => {
-        const currentTime = `${time.getHours().toString().padStart(2, '0')}:${time.getMinutes().toString().padStart(2, '0')}`;
-        return currentTime === prayerTime;
+        const currenttime = `${time.getHours().toString().padStart(2, '0')}:${time.getMinutes().toString().padStart(2, '0')}`;
+        return currenttime === prayerTime;
     };
 
     const playAudio = () => {
@@ -48,7 +46,6 @@ function Adan() {
             }
         };
         document.addEventListener('click', startAudio);
-
         return () => {
             document.removeEventListener('click', startAudio);
         };
@@ -71,44 +68,42 @@ function Adan() {
         setCity(formattedData);
     };
 
-
-
     const NextPrey = () => {
         if (!dataPray) return 'جاري التحميل...';
-        const prayers = dataPray ? {
+
+        const prayers = {
             "الفجر": dataPray.Fajr,
             "الظهر": dataPray.Dhuhr,
             "العصر": dataPray.Asr,
             "المغرب": dataPray.Maghrib,
             "العشاء": dataPray.Isha
-        } : {};
+        };
 
         const sortPreys = Object.entries(prayers).sort((a, b) => a[1].localeCompare(b[1]));
+        const currenttime = `${time.getHours().toString().padStart(2, '0')}:${time.getMinutes().toString().padStart(2, '0')}`;
+
         for (let [name, prayTime] of sortPreys) {
             if (currenttime < prayTime) {
                 return `${name} - ${prayTime}`;
-
             }
         }
+        return "انتهت صلوات اليوم";
     }
 
     return (
         <div className="Adan">
             <div className='container'>
                 <div className="header">
-
                     <div className="date">
                         <h1>{time.toLocaleDateString('ar-EG', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</h1>
                     </div>
                     <div className="time">
-                        {clickpage ? <i class="fas fa-volume-up"></i> : <i class="fas fa-volume-mute"></i>}
-
+                        {clickpage ? <i className="fas fa-volume-up"></i> : <i className="fas fa-volume-mute"></i>}
                         <h1>
-                            {time.getSeconds().toString().padStart(2, '0')} :
+                            {time.getHours().toString().padStart(2, '0')} :
                             {time.getMinutes().toString().padStart(2, '0')} :
-                            {time.getHours().toString().padStart(2, '0')}
+                            {time.getSeconds().toString().padStart(2, '0')}
                         </h1>
-
                     </div>
                 </div>
 
@@ -120,41 +115,15 @@ function Adan() {
                     </form>
 
                     <div className="pray-times">
-                        <div className="card">
-                            <img src={fajr} alt="" />
-                            <div className="info">
-                                <h1>الفجر</h1>
-                                <h3>{dataPray ? dataPray.Fajr : 'جاري التحميل...'}</h3>
+                        {["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"].map((pray, index) => (
+                            <div className="card" key={index}>
+                                <img src={fajr} alt="" />
+                                <div className="info">
+                                    <h1>{["الفجر", "الظهر", "العصر", "المغرب", "العشاء"][index]}</h1>
+                                    <h3>{dataPray ? dataPray[pray] : 'جاري التحميل...'}</h3>
+                                </div>
                             </div>
-                        </div>
-                        <div className="card">
-                            <img src={fajr} alt="" />
-                            <div className="info">
-                                <h1>الظهر</h1>
-                                <h3>{dataPray ? dataPray.Dhuhr : 'جاري التحميل...'}</h3>
-                            </div>
-                        </div>
-                        <div className="card">
-                            <img src={fajr} alt="" />
-                            <div className="info">
-                                <h1>العصر</h1>
-                                <h3>{dataPray ? dataPray.Asr : 'جاري التحميل...'}</h3>
-                            </div>
-                        </div>
-                        <div className="card">
-                            <img src={fajr} alt="" />
-                            <div className="info">
-                                <h1>المغرب</h1>
-                                <h3>{dataPray ? dataPray.Maghrib : 'جاري التحميل...'}</h3>
-                            </div>
-                        </div>
-                        <div className="card">
-                            <img src={fajr} alt="" />
-                            <div className="info">
-                                <h1>العشاء</h1>
-                                <h3>{dataPray ? dataPray.Isha : 'جاري التحميل...'}</h3>
-                            </div>
-                        </div>
+                        ))}
                     </div>
 
                     <div className="pray-kadima">
